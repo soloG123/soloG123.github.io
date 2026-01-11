@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <title>Solomon Goh</title>
+    <style>
+    </style>
+</head>
+<body>
+    <div class="game-container storybox">
+        <div id="game-ui">
+            <p id="stats">Round: <span id="round-num">1</span>/5 | Score: <span id="score">0</span></p>
+            
+            <h2 id="instruction-text" style="color: white; margin-bottom: 20px;">CLICK ON THE REAL PERSON</h2>
+
+            <div class="dual-image-container">
+                <div class="image-option" onclick="checkAnswer(0)">
+                    <img id="img-left" src="" alt="Option 1">
+                </div>
+                <div class="image-option" onclick="checkAnswer(1)">
+                    <img id="img-right" src="" alt="Option 2">
+                </div>
+            </div>
+
+            <p id="feedback-text">Analyze carefully...</p>
+            
+        </div>
+    </div>
+      <div class="video-background">
+        <video autoplay muted id="myVideo">
+            <source src="intro_bg.mp4" type="video/mp4">
+        </video>
+    </div>
+    <audio autoplay loop>
+    <source src="menu_sound.wav" type="audio/wav">
+    </audio>
+    <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <title>Interactive Briefing</title>
+    <style>
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            overflow: hidden;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* The Menu/Text Layer */
+        .menu {
+            position: absolute;
+            top: 10%;
+            width: 100%;
+            scale: 0.8;
+            text-align: center;
+            z-index: 100; /* Highest visual layer */
+            color: #4ece75;
+            font-family: "Orbitron", sans-serif;
+            pointer-events: none; /* Allows clicks to pass through to the map */
+            transition: opacity 0.5s ease;
+            transform: translateY(100px) translateX(40px);
+        }
+        .menu h1 {
+            font-size: 5rem;     /* Makes AGENT AI massive */
+            letter-spacing: 15px;/* High-tech spaced out look */
+            margin: 0;
+            text-shadow: 
+            0 0 5px #4ece75, 
+            0 0 15px #1a5c2f, 
+            0 0 30px rgba(78, 206, 117, 0.3);
+            font-weight: 900;
+            opacity: 0;
+            
+        }
+        #notice p {
+            font-size: 2rem;
+            letter-spacing: 4px;
+            color: white;
+            text-transform: uppercase;
+            opacity: 0.8;
+            background: rgba(255, 255, 255, 0.1); /* Subtle dark box behind sub-text */
+            display: inline-block;
+            padding: 10px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* The Image Layer (Top layer for interaction) */
+        .map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 50; /* Above video, below text */
+            pointer-events: auto;
+            transition: opacity 1.5s ease-in-out; /* Adjust 1.5s to your preferred speed */
+            opacity: 1;
+        }
+
+        /* The Video Layer (Bottom layer) */
+        #briefing-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+        #notice p {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; text-shadow: 0 0 10px white; }
+            100% { opacity: 0.4; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="menu" id="notice">
+        <h1>AGENT AI</h1>
+        <p>CLICK ON THE LAPTOP TO BEGIN</p>
+    </div>
+
+    <div class="video-container">
+        <video id="briefing-video" preload="auto" muted>
+            <source src="laptop-bg.mp4" type="video/mp4">
+        </video>
+
+        <img src="firstframe.jpg" usemap="#image-map" class="map-overlay" id="placeholder">
+
+
+        <map name="image-map">
+            <area shape="poly" 
+                  coords="1003,1449,1065,857,948,603,2109,592,1899,849,2031,1420" 
+                  onclick="startBriefing(), startCinematic()"
+                  href="javascript:void(0);">
+        </map>
+    </div>
+
+    <audio id="huzzbait">
+        <source src="intro_sfx.wav" type="audio/wav">
+    </audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/image-map-resizer/1.0.10/js/imageMapResizer.min.js"></script>
+
+    <script>
+        // Initialize the resizer so coordinates scale with the window
+        window.onload = function() {
+            imageMapResize();
+        };
+
+        function startBriefing() {
+            const img = document.getElementById('placeholder');
+            const video = document.getElementById('briefing-video');
+            const menuText = document.querySelector('.menu');
+
+            if (img && video) {
+                // Hide the image
+                img.style.opacity = '0';
+
+                setTimeout(() => {
+                img.style.display = 'none';
+            }, 1500); 
+
+            video.play().catch(error => {
+                console.log("Video play failed:", error);
+            });
+
+                if (menuText) menuText.style.opacity = '0';
+
+                // Play the video
+                video.play();
+                
+                // Optional: Redirect when done
+                video.onended = function() {
+                    window.location.href = "intro.html";
+                };
+            }
+        }
+        function startCinematic() {
+            const sound = document.getElementById('huzzbait');
+
+            sound.play().catch(error => {
+                console.log("Audio play failed:", error);
+            });
+        }
+
+    </script>
+</body>
+</html>

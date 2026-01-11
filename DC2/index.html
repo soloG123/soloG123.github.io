@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game of AI</title>
+    <style>
+        body{
+                margin:0;
+                padding:0;
+                width:100vw;
+                height:100vh;
+                display:flex;
+                justify-content: center;
+                align-items: center;
+                background-color: black;
+                background-image: url("digitalbg.jpg"); 
+                background-size: cover;
+                background-attachment: fixed;
+            }
+        /* This container holds the window space */
+        .container {
+            width: 960px;
+            height: 540px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8); /* Adds depth */
+        }
+
+        iframe {
+            /* 1. Render the iframe at Full HD so your layout works */
+            width: 1920px;
+            height: 1080px;
+            
+            /* 2. Scale it down to 50% to fit the 960x540 container */
+            transform: scale(0.5);
+            transform-origin: 0 0; /* Scale from the top-left corner */
+            
+            border: none;
+            background-color: black;
+            display: block; /* Removes tiny gaps */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+       <iframe src="firstpage.html" allowtransparency="true"></iframe>
+    </div>
+<script src="animation.js"></script>
+</body>
+</html>
