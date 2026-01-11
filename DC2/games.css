@@ -1,0 +1,47 @@
+#mission-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #000;
+    z-index: 9999; /* Stays above everything */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif;
+    transition: opacity 0.8s ease;
+}
+
+.mission-content {
+    text-align: center;
+    border: 1px solid #4ece75;
+    padding: 40px;
+    background: rgba(0, 20, 0, 0.9);
+    box-shadow: 0 0 30px #4ece75;
+    max-width: 800px;
+    width: 80%;
+}
+
+.mission-line {
+    height: 2px;
+    background: #4ece75;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.loading-bar {
+    width: 100%;
+    height: 4px;
+    background: #111;
+    margin-top: 20px;
+}
+
+.loading-fill {
+    height: 100%;
+    background: #4ece75;
+    width: 0%;
+    animation: load 2.5s forwards;
+}
+
+@keyframes load {
+    0% { width: 0%; }
+    100% { width: 100%; }
+}

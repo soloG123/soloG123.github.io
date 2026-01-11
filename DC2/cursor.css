@@ -1,0 +1,23 @@
+/* 1. Apply cursor ONLY to the Game Containers */
+.dossier-box, 
+.terminal-container,
+.top-bar {
+    cursor: url('cursor-pen.png'), auto !important;
+}
+
+/* 2. Force items INSIDE the box to use the pen 
+   (Prevents the cursor from turning into a text-select bar) */
+.dossier-box *,
+.terminal-container *,
+.top-bar * {
+    cursor: inherit !important;
+}
+
+/* 3. Exceptions: Clickable items get the "Hand" cursor */
+.email-item:hover,
+.clue-hotspot:hover,
+.close-btn:hover,
+button:hover,
+a:hover {
+    cursor: url('activated-cursor.png'), pointer !important;
+}
