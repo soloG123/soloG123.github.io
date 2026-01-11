@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="cursor.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <title>Deepfake Analysis</title>
+</head>
+<body class="orbitron-normal">
+    <div class="game-container analysis-layout">
+        <h2 style="color: #4ece75;">SCANNING FOR INCONSISTENCIES</h2>
+
+        <div class="image-map-wrapper">
+            <img src="example.jpeg" usemap="#face-map" alt="Analyze this face" id="analysis-img">
+            <map name="face-map">
+                <area shape="circle" coords="150,100,30" alt="Eyes" onclick="revealClue('Unnatural eye reflections detected.')">
+                <area shape="rect" coords="120,200,280,250" alt="Mouth" onclick="revealClue('Lip movement sync error.')">
+                <area shape="circle" coords="300,80,40" alt="Hair" onclick="revealClue('Blurred hairline edges identified.')">
+            </map>
+        </div>
+
+        <p id="feedback-text">Click on facial anomalies to investigate.</p>
+
+        <nav id="next-btn" style="margin-top: 20px; display: none;" onclick="window.location.href='game.html'">
+            <p>PROCEED TO FIELD TEST</p>
+        </nav>
+    </div>
+
+    <script>
+        let cluesFound = 0;
+        const totalClues = 3;
+
+        function revealClue(message) {
+            const feedback = document.getElementById('feedback-text');
+            feedback.innerText = message;
+            feedback.style.color = "#4ece75";
+            
+            cluesFound++;
+            if (cluesFound >= totalClues) {
+                document.getElementById('next-btn').style.display = "inline-block";
+                feedback.innerText = "ANALYSIS COMPLETE. PROCEED.";
+            }
+        }
+    </script>
+</body>
+</html>
