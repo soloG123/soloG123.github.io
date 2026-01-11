@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solomon Goh | Biometric Scan</title>
+    
+    <link rel="stylesheet" href="games.css">
+    <link rel="stylesheet" href="cursor.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- GLOBAL RESET (Same as previous) --- */
+        html, body {
+            margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+            background-color: #000; color: #4ece75; font-family: "Share Tech Mono", monospace;
+        }
+
+        /* --- BACKGROUND --- */
+        .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.3;}
+        #myVideo { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; filter: grayscale(60%); }
+        .tech-grid {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(78, 206, 117, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(78, 206, 117, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px; pointer-events: none;
+        }
+        .scanlines {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(to bottom, rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%);
+            background-size: 100% 4px; z-index: 999; pointer-events: none;
+        }
+
+        /* --- CONTAINER --- */
+        .terminal-container {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 900px; z-index: 10;
+        }
+
+        .top-bar {
+            display: flex; justify-content: space-between; border-bottom: 2px solid #4ece75;
+            padding-bottom: 10px; margin-bottom: 20px; font-family: "Orbitron", sans-serif;
+            font-size: 0.8rem; letter-spacing: 2px;
+        }
+        .classification { color: #ff4e4e; border: 1px solid #ff4e4e; padding: 2px 8px; font-weight: bold; }
+        .blink-text { animation: blinker 2s linear infinite; color: #ff4e4e; }
+        @keyframes blinker { 50% { opacity: 0; } }
+        .dossier-box {
+            position: relative; padding: 20px; 
+            background: rgba(0, 10, 0, 0.9);
+            border: 1px solid rgba(78, 206, 117, 0.5); 
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+        }
+        .video-preloader-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center; /* Centers video vertically (creates top/bottom bars) */
+            justify-content: center;
+            background-color: #000; /* Ensures bars are solid black */
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        #intro-cinematic {
+            width: 100%;      /* Forces video to fill the width */
+            height: auto;     /* Maintains 16:9 aspect ratio */
+            max-height: 100%; /* Prevents it from spilling out vertically */
+            display: block;
+        }
+
+        /* --- CORNER BRACKETS --- */
+        .corner-bracket { 
+            position: absolute; 
+            width: 30px; 
+            height: 30px; 
+            border: 2px solid #4ece75;
+            z-index: 20;
+         }
+        .top-left { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+        .top-right { top: -2px; right: -2px; border-left: none; border-bottom: none; }
+        .bottom-left { bottom: -2px; left: -2px; border-right: none; border-top: none; }
+        .bottom-right { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+
+        /* --- DEEPFAKE ANALYZER UI --- */
+        .scanner-viewport {
+            position: relative; width: 100%; max-width: 500px; margin: 0 auto;
+            border: 1px solid #4ece75; overflow: hidden;
+        }
+
+        /* Placeholder for where the Deepfake Image goes */
+        #target-image {
+            width: 100%; display: block; 
+            filter: none;
+            opacity: 1;
+        }
+
+        /* SCANNER RETICLE ANIMATION */
+        .scanner-bar {
+            position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: #4ece75; box-shadow: 0 0 10px #4ece75; opacity: 0.5;
+            animation: scan 3s linear infinite; pointer-events: none;
+        }
+        @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
+
+        /* HOTSPOTS */
+        .hotspot {
+            position: absolute; width: 40px; height: 40px; border: 2px dashed #4ece75;
+            border-radius: 50%; cursor: crosshair; transition: transform 0.2s;
+            animation: pulse 2s infinite;
+        }
+        .hotspot:hover { transform: scale(1.2); background: rgba(255, 78, 78, 0.2); }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 78, 78, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 78, 78, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 78, 78, 0); } }
+
+        /* --- SIDE INFO --- */
+        .scan-data {
+            margin-top: 20px; font-family: "Orbitron"; text-transform: uppercase; z-index: 201;
+        }
+        .progress-bar {
+            width: 100%; height: 20px; background: #111; border: 1px solid #4ece75; margin-top: 5px;
+        }
+        .fill {
+            height: 100%; background: #4ece75; width: 0%; transition: width 0.5s;
+        }
+
+        /* --- MODAL --- */
+        #analysis-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 200; display: none;
+            align-items: center; justify-content: center;
+        }
+        .analysis-content {
+            border: 2px solid #4ece75; background: #001a00; padding: 30px; max-width: 400px;
+            text-align: left; box-shadow: 0 0 50px rgba(78, 206, 117, 0.2);
+        }
+        .analysis-content h3 { color: #fff; border-bottom: 1px dashed #4ece75; padding-bottom: 10px; }
+        .analysis-content p { color: #4ece75; font-size: 1.1rem; }
+        .btn-ack {
+            background: transparent; border: 1px solid #4ece75; color: #4ece75;
+            padding: 10px 20px; font-family: "Orbitron"; cursor: pointer; margin-top: 20px; width: 100%;
+        }
+        .btn-ack:hover { background: #4ece75; color: #000; }
+
+    </style>
+</head>
+<body>
+    <div id="mission-overlay">
+        <div class="mission-content">
+            <h1 id="mission-title">INITIALIZING...</h1>
+            <div class="mission-line"></div>
+            <p id="mission-desc">Scanning environment for threats...</p>
+            <div class="loading-bar"><div class="loading-fill"></div></div>
+        </div>
+    </div>
+    <div class="scanlines"></div>
+    <div class="video-background">
+        <video autoplay muted loop id="myVideo">
+            <source src="code-bg.mp4" type="video/mp4">
+        </video>
+        <div class="tech-grid"></div>
+    </div>
+
+    <div class="terminal-container">
+        <div class="top-bar">
+            <span class="blink-text">● SCANNING</span>
+            <span class="classification">DEEPFAKE DETECTION // LEVEL 2</span>
+            <span id="date-display">2025.00.00</span>
+        </div>
+
+        <div class="dossier-box">
+            <div class="corner-bracket top-left"></div>
+            <div class="corner-bracket top-right"></div>
+            <div class="corner-bracket bottom-left"></div>
+            <div class="corner-bracket bottom-right"></div>
+
+            <div class="video-preloader-container">
+                <video id="intro-cinematic" playsinline>
+                    <source src="obama.mp4" type="video/mp4">
+                </video>
+            </div>
+
+            <div id="game-content" style="opacity: 0; transition: opacity 1s ease; z-index: 10;">
+                <h1 class="agent-greeting" style="font-size: 2rem;">SUBJECT ANALYSIS</h1>
+                <p>LOCATE ARTIFACTS. CLICK ANOMALIES TO VERIFY AUTHENTICITY.</p>
+
+                <div class="scanner-viewport">
+                    <img id="target-image" src="obama.png" alt="Subject">
+                    <div class="scanner-bar"></div>
+                    
+                    <div class="hotspot" style="top: 25%; left: 43%;" onclick="analyzeDeepfake('eyes')"></div>
+                    
+                    <div class="hotspot" style="top: 40%; left: 52%;" onclick="analyzeDeepfake('lips')"></div>
+
+                    <div class="hotspot" style="top: 15%; left: 63%;" onclick="analyzeDeepfake('skin')"></div>
+                </div>
+
+                <div class="scan-data">
+                    <span>ANOMALIES DETECTED: <span id="found-count">0</span>/3</span>
+                    <div class="progress-bar"><div class="fill" id="scan-progress"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="analysis-overlay">
+        <div class="analysis-content">
+            <h3 id="modal-title">ANOMALY DETECTED</h3>
+            <p id="modal-desc">Description of the artifact.</p>
+            <button class="btn-ack" onclick="closeDeepfakeModal()">CONFIRM ANOMALY</button>
+        </div>
+    </div>
+    <div id="transition-overlay" style="
+        position: fixed; 
+        top: 0; left: 0; 
+        width: 100%; height: 100%; 
+        background: black; 
+        z-index: 10000; 
+        pointer-events: none; 
+        opacity: 0; 
+        transition: opacity 0.8s ease-in-out;">
+    </div>
+
+    <script src="game_logic.js"></script>
+    <script>
+        document.getElementById('date-display').innerText = new Date().toISOString().split('T')[0].replace(/-/g, '.');
+    </script>
+</body>
+</html>

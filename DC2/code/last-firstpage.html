@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <title>first page</title>
+    <style>
+    </style>
+</head>
+<body>
+    <div id="fade-overlay"></div>
+    <div class="menu">
+        <h1>AGENT AI</h1>
+        <div id="notice">
+            <p>CLICK ON THE LAPTOP</p>
+        </div>
+    </div>
+    <div class="video-container">
+        <video id="briefing-video" preload="auto" muted>
+            <source src="laptop-bg.mp4" type="video/mp4">
+        </video>
+
+        <img src="firstframe.png" usemap="#image-map" class="#map-overlay">
+
+        <map name="image-map">
+            <area id="laptop-trigger" 
+            shape="poly" 
+            coords="1003,1449,1065,857,948,603,2109,592,1899,849,2031,1420" 
+            onclick="startBriefing()" 
+            href="javascript:void(0);">
+        </map>
+    </div>
+    <script src="animation.js"></script>
+</body>
+</html>
